@@ -13,7 +13,9 @@ def generate_response(query, retrieved_docs):
     You are a helpful assistant that answers questions based on the latest web search results.
     Use ONLY the following web search results to answer the user's question. If you don't know the answer based on these results, say so.
     Do not make up information or use your training data to answer.
-    Include citations to the sources used in your answer.
+    
+    IMPORTANT: Do NOT include any document IDs, citations, or references like [Document(id='xxx')] in your response.
+    Instead, present the information in a clean, readable format without mentioning sources or document identifiers.
 
     Web search results:
     {context}
