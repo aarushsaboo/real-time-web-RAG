@@ -6,7 +6,7 @@ from src.config import LLM_MODEL
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
-def generate_response(query, retrieved_docs):
+def generate_response(query, retrieved_docs, conversation_history=""):
     llm = ChatGoogleGenerativeAI(model=LLM_MODEL)
     
     template = """
@@ -17,6 +17,8 @@ def generate_response(query, retrieved_docs):
     IMPORTANT: Do NOT include any document IDs, citations, or references like [Document(id='xxx')] in your response.
     Instead, present the information in a clean, readable format without mentioning sources or document identifiers.
 
+    {conversation_history}
+
     Web search results:
     {context}
 
@@ -26,7 +28,9 @@ def generate_response(query, retrieved_docs):
     prompt = ChatPromptTemplate.from_template(template)
     
     chain = (
-        {"context": lambda x: format_docs(x), "question": RunnablePassthrough()}
+        {"context": lambda x: format_docs(x), 
+         "question": RunnablePassthrough(),
+         "conversation_history": lambda _: conversation_history}
         | prompt
         | llm
     )

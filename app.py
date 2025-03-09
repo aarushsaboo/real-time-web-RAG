@@ -7,10 +7,20 @@ from src.search.web_search import search_web
 from src.processing.scraper import process_urls
 from src.retrieval.vector_store import create_vector_store, retrieve_documents
 from src.generation.response_generator import generate_response
+from src.memory.conversation_memory import ConversationManager
 from src.config import API_KEY
-from src.ui.streamliit_app import setup_page, setup_sidebar, initialize_api, display_chat_history, get_user_input
+from src.ui.streamlit_app import (
+    setup_page, 
+    setup_sidebar, 
+    initialize_api, 
+    display_chat_history, 
+    get_user_input
+)
 
-def real_time_web_rag(query, num_results, num_chunks):
+def real_time_web_rag(query, num_results, num_chunks, conversation_manager):
+    # Get conversation history
+    conversation_history = conversation_manager.get_formatted_history()
+    
     # Search the web
     with st.status("🔎 Searching the web...") as status:
         urls = search_web(query, num_results=num_results)
@@ -48,7 +58,7 @@ def real_time_web_rag(query, num_results, num_chunks):
     
     # Generate response
     with st.status("💬 Generating response...") as status:
-        response = generate_response(query, retrieved_docs)
+        response = generate_response(query, retrieved_docs, conversation_history)
         status.update(label="✅ Response ready", state="complete")
     
     return response
@@ -59,6 +69,10 @@ def main():
     num_results, num_chunks = setup_sidebar()
     initialize_api()
     
+    # Initialize conversation manager
+    if "conversation_manager" not in st.session_state:
+        st.session_state.conversation_manager = ConversationManager()
+    
     # Display previous messages
     display_chat_history()
     
@@ -68,6 +82,7 @@ def main():
     if user_query:
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": user_query})
+        st.session_state.conversation_manager.add_user_message(user_query)
         
         # Display user message
         with st.chat_message("user"):
@@ -75,9 +90,10 @@ def main():
         
         # Process the query and generate response
         with st.chat_message("assistant"):
-            response = real_time_web_rag(user_query, num_results, num_chunks)
+            response = real_time_web_rag(user_query, num_results, num_chunks, st.session_state.conversation_manager)
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
+            st.session_state.conversation_manager.add_ai_message(response)
     
     # Footer
     st.markdown("---")
