@@ -3,6 +3,6 @@ duckduckgo_search==7.5.1
 langchain==0.3.20
 langchain_community==0.3.19
 langchain_google_genai==2.0.11
-protobuf==6.30.0
+protobuf>=3.20,<6
 Requests==2.32.3
 streamlit==1.43.1
