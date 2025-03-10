@@ -1,5 +1,4 @@
 import os
-import google.generativeai as genai
 
 API_KEY = "AIzaSyC5zEinq8gaFKWr33_Mjusxbm-fyYS0YZA"
 LLM_MODEL = "gemini-1.5-flash"
