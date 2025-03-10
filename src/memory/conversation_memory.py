@@ -1,11 +1,11 @@
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain_google_genai import ChatGoogleGenerativeAI
-from src.config import LLM_MODEL
+from src.config import LLM_MODEL, API_KEY
 
 class EnhancedConversationMemory:
     def __init__(self, max_token_limit=2000):
         # Use a summary buffer memory with a summarization model
-        self.memory_llm = ChatGoogleGenerativeAI(model=LLM_MODEL, temperature=0)
+        self.memory_llm = ChatGoogleGenerativeAI(model=LLM_MODEL, temperature=0, google_api_key=API_KEY)
         self.memory = ConversationSummaryBufferMemory(
             llm=self.memory_llm,
             max_token_limit=max_token_limit,
