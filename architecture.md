@@ -8,7 +8,7 @@ flowchart TD
     end
 
     subgraph Session_State["Streamlit Session State"]
-        SS_Chats[["Chat Sessions Dictionary\n{chat_id: {messages: [], memory: obj}}"] ]
+        SS_Chats[["Chat Sessions Dictionary\n{chat_id: {messages: [], memory: obj}}"]]
         SS_Current[Current Chat ID]
     end
 
