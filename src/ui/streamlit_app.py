@@ -1,6 +1,7 @@
 import streamlit as st
 import os
-import google.generativeai as genai
+# import google.generativeai as genai
+from langchain_google_genai import GoogleGenerativeAI
 from src.config import API_KEY, MAX_SEARCH_RESULTS, MAX_CHUNKS_TO_RETRIEVE
 
 def setup_page():
@@ -36,7 +37,6 @@ def setup_sidebar():
 
 def initialize_api():
     os.environ["GOOGLE_API_KEY"] = API_KEY
-    genai.configure(api_key=API_KEY)
 
 def display_chat_history():
     for message in st.session_state.messages:

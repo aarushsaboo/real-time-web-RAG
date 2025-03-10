@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 import os
-import google.generativeai as genai
+# import google.generativeai as genai
 
 from src.search.web_search import search_web
 from src.processing.scraper import process_urls
